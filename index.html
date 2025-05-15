@@ -2,97 +2,150 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
+  <title>Ma Trận Rồng 🐉</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nhân Hai Ma Trận</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://i.imgur.com/ZAZckMo.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      backdrop-filter: blur(6px);
+    }
+
+    .container {
+      background: rgba(0, 0, 0, 0.6);
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px gold;
+    }
+
+    h1 {
+      text-align: center;
+      color: gold;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    input[type="number"] {
+      width: 60px;
+      padding: 5px;
+      margin: 2px;
+      text-align: center;
+    }
+
+    .matrix {
+      margin: 10px auto;
+      text-align: center;
+    }
+
+    button {
+      background: gold;
+      color: black;
+      font-weight: bold;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: crimson;
+      color: white;
+    }
+
+    .result-table td {
+      border: 1px solid white;
+      padding: 6px 12px;
+    }
+
+    .flex-inputs {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  </style>
 </head>
-<body class="bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 min-h-screen p-6 font-sans">
-  <div class="max-w-5xl mx-auto bg-white shadow-2xl rounded-2xl p-8">
-    <h1 class="text-3xl font-bold text-center text-indigo-700 mb-6">🧮 Nhân Hai Ma Trận</h1>
-
-    <!-- Kích thước -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-sm">
+<body>
+  <div class="container">
+    <h1>🐉 Tính Tích Hai Ma Trận</h1>
+    
+    <div class="flex-inputs">
       <div>
-        <label class="block mb-1 text-gray-700 font-semibold">Số hàng A</label>
-        <input type="number" id="rowsA" class="w-full border rounded p-2" min="1">
+        <label>Số hàng A:</label>
+        <input type="number" id="rowsA" min="1">
+        <label>Số cột A:</label>
+        <input type="number" id="colsA" min="1">
       </div>
       <div>
-        <label class="block mb-1 text-gray-700 font-semibold">Số cột A</label>
-        <input type="number" id="colsA" class="w-full border rounded p-2" min="1">
-      </div>
-      <div>
-        <label class="block mb-1 text-gray-700 font-semibold">Số hàng B</label>
-        <input type="number" id="rowsB" class="w-full border rounded p-2" min="1">
-      </div>
-      <div>
-        <label class="block mb-1 text-gray-700 font-semibold">Số cột B</label>
-        <input type="number" id="colsB" class="w-full border rounded p-2" min="1">
+        <label>Số hàng B:</label>
+        <input type="number" id="rowsB" min="1">
+        <label>Số cột B:</label>
+        <input type="number" id="colsB" min="1">
       </div>
     </div>
 
-    <div class="text-center mb-6">
-      <button onclick="generateMatrixInputs()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2 rounded-lg transition">
-        Tạo Ma Trận
-      </button>
+    <div style="text-align:center;">
+      <button onclick="generateMatrices()">Tạo Ma Trận</button>
     </div>
 
-    <!-- Nhập ma trận -->
-    <div id="matrixInputs" class="space-y-6"></div>
-
-    <!-- Kết quả -->
-    <div id="result" class="mt-10 text-center"></div>
+    <div id="matrices" class="matrix"></div>
+    <div id="result" class="matrix"></div>
   </div>
 
   <script>
-    function generateMatrixInputs() {
-      const m = parseInt(document.getElementById("rowsA").value);
-      const n = parseInt(document.getElementById("colsA").value);
-      const p = parseInt(document.getElementById("rowsB").value);
-      const q = parseInt(document.getElementById("colsB").value);
-      const container = document.getElementById("matrixInputs");
-      const result = document.getElementById("result");
+    function generateMatrices() {
+      const m = +document.getElementById('rowsA').value;
+      const n = +document.getElementById('colsA').value;
+      const p = +document.getElementById('rowsB').value;
+      const q = +document.getElementById('colsB').value;
+      const container = document.getElementById('matrices');
+      const result = document.getElementById('result');
 
       container.innerHTML = '';
       result.innerHTML = '';
 
-      if (isNaN(m) || isNaN(n) || isNaN(p) || isNaN(q)) {
-        container.innerHTML = "<p class='text-red-500'>⚠️ Vui lòng nhập đầy đủ kích thước ma trận.</p>";
-        return;
-      }
-
       if (n !== p) {
-        container.innerHTML = "<p class='text-red-500'>❌ Không thể nhân: Số cột A phải bằng số hàng B.</p>";
+        container.innerHTML = "<p style='color:red;'>❌ Số cột của A phải bằng số hàng của B để nhân được.</p>";
         return;
       }
 
-      container.innerHTML = `
-        <h2 class="text-xl font-semibold text-indigo-600">Ma Trận A (${m}×${n})</h2>
-        ${createMatrix('A', m, n)}
-        <h2 class="text-xl font-semibold text-indigo-600 mt-4">Ma Trận B (${p}×${q})</h2>
-        ${createMatrix('B', p, q)}
-        <div class="text-center mt-6">
-          <button onclick="calculate(${m}, ${n}, ${q})" class="bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-2 rounded-lg transition">
-            Nhân Ma Trận
-          </button>
-        </div>
-      `;
+      let html = `<h2>Nhập Ma Trận A (${m}×${n})</h2>`;
+      html += createMatrixInputs('A', m, n);
+      html += `<h2>Nhập Ma Trận B (${p}×${q})</h2>`;
+      html += createMatrixInputs('B', p, q);
+      html += `<button onclick="multiply(${m}, ${n}, ${q})">Nhân Ma Trận</button>`;
+
+      container.innerHTML = html;
     }
 
-    function createMatrix(id, rows, cols) {
-      let html = `<div class="inline-block overflow-auto"><table class="mx-auto border border-gray-300">`;
+    function createMatrixInputs(name, rows, cols) {
+      let html = `<table style="margin:auto;">`;
       for (let i = 0; i < rows; i++) {
-        html += "<tr>";
+        html += '<tr>';
         for (let j = 0; j < cols; j++) {
-          html += `<td><input type="number" id="${id}_${i}_${j}" class="w-16 text-center p-2 border border-gray-300"></td>`;
+          html += `<td><input type="number" id="${name}_${i}_${j}"></td>`;
         }
-        html += "</tr>";
+        html += '</tr>';
       }
-      html += "</table></div>";
+      html += `</table>`;
       return html;
     }
 
-    function calculate(m, n, q) {
-      const A = [], B = [];
+    function multiply(m, n, q) {
+      const A = [], B = [], C = [];
 
       for (let i = 0; i < m; i++) {
         A[i] = [];
@@ -108,7 +161,6 @@
         }
       }
 
-      const C = [];
       for (let i = 0; i < m; i++) {
         C[i] = [];
         for (let j = 0; j < q; j++) {
@@ -124,17 +176,16 @@
     }
 
     function displayResult(matrix) {
-      let html = `<h2 class="text-xl font-bold text-green-700 mb-3">Kết quả C = A × B</h2>`;
-      html += `<div class="inline-block overflow-auto"><table class="mx-auto border border-gray-400 bg-green-50">`;
+      let html = `<h2>Kết quả (Ma Trận C):</h2><table class="result-table" style="margin:auto;">`;
       for (let i = 0; i < matrix.length; i++) {
         html += "<tr>";
         for (let j = 0; j < matrix[0].length; j++) {
-          html += `<td class="border border-gray-300 px-4 py-2 font-semibold">${matrix[i][j]}</td>`;
+          html += `<td>${matrix[i][j]}</td>`;
         }
         html += "</tr>";
       }
-      html += "</table></div>";
-      document.getElementById("result").innerHTML = html;
+      html += "</table>";
+      document.getElementById('result').innerHTML = html;
     }
   </script>
 </body>
